@@ -1,0 +1,8 @@
+---
+postgres:
+  version: 9.3
+
+database:
+  name: swift_platform_production
+  user: "{{ deploy_user }}"
+  password: "{{ deploy_user }}"

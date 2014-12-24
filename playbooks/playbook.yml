@@ -1,0 +1,40 @@
+---
+# Vagrant playbook
+#==========================================================
+- hosts: default
+  sudo: true
+  vars:
+    deploy_user: vagrant
+  roles:
+    - role: user
+    - role: security
+    - role: essentials
+    - role: nodejs
+    - role: nginx
+    - role: postgresql
+    - role: ruby
+  tasks:
+    - include: tasks/env_settings.yml
+
+# Web playbook
+#==========================================================
+- hosts: web
+  sudo: true
+  user: root
+  vars:
+    deploy_user: deploy
+  roles:
+    - role: user
+    - role: security
+
+- hosts: web
+  sudo: true
+  user: deploy
+  vars:
+    deploy_user: deploy
+  roles:
+    - role: essentials
+    - role: nodejs
+    - role: nginx
+    - role: postgresql
+    - role: ruby

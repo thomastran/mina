@@ -1,0 +1,12 @@
+---
+- name: set gemrc
+  copy: src=gemrc dest=/root/.gemrc owner=root group=root mode=0644
+
+- name: install rails dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - libqt4-dev
+    - libpq-dev
+
+- name: install bundler
+  shell: RBENV_ROOT={{ rbenv_root }} rbenv exec gem install bundler --no-ri --no-rdoc

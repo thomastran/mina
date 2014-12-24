@@ -1,0 +1,40 @@
+---
+- name: install dependencies
+  action: apt pkg={{ item }} state=present
+  with_items:
+    - python-apt
+    - python-psycopg2
+
+- name: get postgres apt key
+  apt_key: url=http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc
+
+- name: add apt-get repository for latest postgres
+  apt_repository: repo="deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_lsb.codename }}-pgdg main"
+
+- name: update apt-get
+  apt: update_cache=yes
+
+- name: install postgres
+  apt: name=postgresql-{{ postgres.version }} state=latest
+
+- name: start postgresql
+  service: name=postgresql state=started 
+
+- name: copy pg_hba.conf
+  template: src=pg_hba.conf dest=/etc/postgresql/9.3/main/pg_hba.conf
+
+- name: set pg_hba.conf permissions
+  file: path=/etc/postgresql/{{ postgres.version }}/main/pg_hba.conf owner=postgres group=postgres mode=0640
+  notify: restart postgresql
+
+- name: create db user
+  postgresql_user: name={{ database.user }} password={{ database.password }} role_attr_flags=CREATEDB
+  sudo_user: postgres
+
+- name: create database
+  postgresql_db: name={{ database.name }} owner={{ database.user }}
+  sudo_user: postgres
+
+- name: ensure postgres starts on a fresh reboot
+  service: name=postgresql state=started enabled=yes
+
