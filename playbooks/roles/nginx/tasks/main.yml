@@ -11,5 +11,8 @@
 - name: delete default vhost
   action: file path=/etc/nginx/sites-enabled/default state=absent
 
+- name: copy my_app.conf
+  template: src=my_app.conf dest=/etc/nginx/sites-enabled/my_app.conf
+
 - name: restart nginx
   action: service name=nginx pattern=/etc/init.d/nginx state=restarted enabled=yes
