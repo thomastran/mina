@@ -14,7 +14,7 @@ set :user, 'vagrant'
 set :domain, 'localhost'
 set :port, 2222
 set :deploy_to, '/var/www/myapp'
-set :repository, 'git@github.com:npearson72/puma.git'
+set :repository, 'git@github.com:thomastran/mina.git'
 set :branch, 'mina'
 set :forward_agent, true
 
